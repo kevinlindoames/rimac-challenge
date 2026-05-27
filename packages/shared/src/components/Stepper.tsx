@@ -1,4 +1,3 @@
-// packages/shared/src/components/Stepper.tsx
 import React from 'react';
 
 interface StepperProps {
@@ -12,7 +11,7 @@ export const Stepper: React.FC<StepperProps> = ({ currentStep, steps }) => {
 
   return (
     <>
-      {/* Desktop: Stepper horizontal */}
+      {/* Desktop: Stepper horizontal con círculos y texto */}
       <div className="hidden md:block w-full bg-[#EDEFFC] py-4">
         <div className="max-w-[1360px] mx-auto px-4 md:px-0">
           <div className="flex flex-row items-center justify-center gap-4">
@@ -20,24 +19,29 @@ export const Stepper: React.FC<StepperProps> = ({ currentStep, steps }) => {
               const stepNumber = index + 1;
               const isActive = stepNumber === currentStep;
               const isCompleted = stepNumber < currentStep;
+
               return (
                 <React.Fragment key={index}>
                   <div className="flex flex-row items-center gap-4">
                     <div className="flex flex-col items-center">
+                      {/* Círculo */}
                       <div
                         className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                          isActive || isCompleted
-                            ? 'bg-[#4F4FFF] text-white'
-                            : 'border border-[#7981B2] text-[#7981B2]'
+                          isActive
+                            ? 'bg-[#4F4FFF] text-white'   // paso actual: relleno azul
+                            : isCompleted
+                            ? 'border border-[#7981B2] text-[#7981B2]' // paso completado: solo borde
+                            : 'border border-[#7981B2] text-[#7981B2]' // pasos futuros: mismo estilo
                         }`}
                       >
                         <span className="text-xs font-bold leading-4 tracking-wide">
                           {stepNumber}
                         </span>
                       </div>
+                      {/* Etiqueta */}
                       <span
                         className={`mt-1 text-sm whitespace-nowrap ${
-                          isActive || isCompleted
+                          isActive
                             ? 'font-bold text-[#141938]'
                             : 'font-normal text-[#7981B2]'
                         }`}

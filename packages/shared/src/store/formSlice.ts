@@ -23,8 +23,9 @@ const formSlice = createSlice({
     updateForm: (state, action: PayloadAction<Partial<UserData>>) => {
       Object.assign(state, action.payload);
     },
+    resetForm: () => initialState,
   },
 });
 
-export const { updateForm } = formSlice.actions;
+export const { updateForm, resetForm } = formSlice.actions;
 export default formSlice.reducer;

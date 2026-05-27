@@ -1,3 +1,4 @@
+// packages/app/src/core/store/slices/quoteSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Plan } from '../../../types/plan';
 
