@@ -53,7 +53,7 @@ export const Step1_UserData = () => {
                 className="w-1/3 md:w-[152px] border border-[#5E6488] rounded-l-md px-3 py-2 bg-white focus:ring-primary focus:border-primary"
               >
                 <option value="DNI">DNI</option>
-                <option value="CE">Carné de Extranjería</option>
+                <option value="CE">CE</option>
               </select>
               <input
                 {...register('documentNumber')}
@@ -92,3 +92,5 @@ export const Step1_UserData = () => {
     </TwoColumnLayout>
   );
 };
+
+export default Step1_UserData;

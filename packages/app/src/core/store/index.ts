@@ -1,9 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
+import quoteReducer from '../slices/quoteSlice';
+
+import userReducer from './slices/userSlice';
 import { userFormReducer } from '@rimac/shared';
 
 export const store = configureStore({
   reducer: {
     userForm: userFormReducer,
+    quote: quoteReducer,
+    user: userReducer,
   },
 });
 

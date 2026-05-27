@@ -1,11 +1,16 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateForm, UserData } from '../store/formSlice';
-import { validateDocument, validatePhone } from '../../../app/src/utils/validators';
+import { validateDocument, validatePhone } from '../utils/validators';
+
+// Definimos la forma esperada del estado (solo la parte que nos interesa)
+interface RootState {
+  userForm: UserData;
+}
 
 export const useUserDataForm = () => {
   const dispatch = useDispatch();
-  const savedData = useSelector((state: any) => state.userForm) as UserData;
+  const savedData = useSelector((state: RootState) => state.userForm);
 
   const save = useCallback((data: UserData) => {
     const errors: string[] = [];
