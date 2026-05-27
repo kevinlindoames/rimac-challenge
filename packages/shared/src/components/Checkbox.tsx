@@ -1,3 +1,4 @@
+// packages/shared/src/components/Checkbox.tsx
 import React from 'react';
 
 interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value'> {
@@ -16,7 +17,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         checked={checked}
         onChange={onChange}
         onBlur={onBlur}
-        className="w-4 h-4 text-primary focus:ring-primary rounded border-gray-300"
+        className="w-4 h-4 accent-black focus:ring-0 focus:ring-offset-0 rounded border-gray-300"
         {...props}
       />
       <span className={`text-[#0A051E] font-normal text-sm md:text-xs leading-6 md:leading-5 tracking-[0.2px] md:tracking-[0.1px] ${wide ? 'w-full' : 'w-[246px]'}`}>

@@ -8,7 +8,7 @@ import { fetchUser } from '../services/api';
 import { calculateAge } from '../utils/helpers';
 import { Button, Input, Checkbox, TwoColumnLayout } from '@rimac/shared';
 import { toast } from 'sonner';
-import heroImage from '../assets/hero.png';
+import heroImage from '../assets/hero.png'; // Asegúrate de tener esta imagen
 import { useAppDispatch } from '../core/hooks/useAppDispatch';
 import { useAppSelector } from '../core/hooks/useAppSelector';
 
@@ -33,7 +33,7 @@ export const Step1_UserData = () => {
   });
 
   const onSubmit = async (data: FormData) => {
-    console.log('Datos enviados:', data);
+    console.log('Enviando:', data);
     dispatch(updateForm(data));
     dispatch(setUserLoading(true));
     try {
@@ -43,7 +43,7 @@ export const Step1_UserData = () => {
       toast.success('Datos guardados correctamente');
       navigate('/step2');
     } catch (error) {
-      console.error('Error en fetchUser:', error);
+      console.error(error);
       dispatch(setUserError('Error al cargar datos del usuario'));
       toast.error('Error al cargar tus datos. Intenta de nuevo.');
     } finally {
@@ -60,10 +60,10 @@ export const Step1_UserData = () => {
     >
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6 w-full max-w-[351px] mx-auto md:mx-0">
         <div className="flex flex-col gap-4 w-full">
+          {/* Campo Documento combinado (select + input) – sin Component Input para evitar márgenes extra */}
           <div className="flex flex-col gap-1 w-full">
             <label className="text-[#03050F] font-semibold text-sm leading-4">Documento</label>
             <div className="flex flex-row w-full h-12">
-              {/* Select nativo usando register (funciona bien) */}
               <select
                 {...register('documentType')}
                 className="w-1/3 md:w-[152px] border border-[#5E6488] rounded-l-md px-3 py-2 bg-white focus:ring-primary focus:border-primary"
@@ -71,18 +71,14 @@ export const Step1_UserData = () => {
                 <option value="DNI">DNI</option>
                 <option value="CE">CE</option>
               </select>
-
-              {/* Input personalizado con Controller */}
               <Controller
                 name="documentNumber"
                 control={control}
                 render={({ field }) => (
-                  <Input
+                  <input
                     {...field}
-                    label=""
-                    error={errors.documentNumber?.message}
-                    required
-                    className="flex-1 border-l-0 rounded-l-none"
+                    placeholder="87654321"
+                    className="flex-1 border border-l-0 border-[#5E6488] rounded-r-md px-3 py-2 bg-white focus:ring-primary focus:border-primary"
                   />
                 )}
               />
@@ -90,7 +86,7 @@ export const Step1_UserData = () => {
             {errors.documentNumber && <p className="text-red-500 text-xs">{errors.documentNumber.message}</p>}
           </div>
 
-          {/* Celular */}
+          {/* Campo Celular (usa Input personalizado) */}
           <Controller
             name="phone"
             control={control}
@@ -105,6 +101,7 @@ export const Step1_UserData = () => {
           />
         </div>
 
+        {/* Checkboxes */}
         <div className="flex flex-col items-start gap-3 w-full">
           <Controller
             name="privacyAccepted"
@@ -141,6 +138,7 @@ export const Step1_UserData = () => {
           </p>
         </div>
 
+        {/* Botón */}
         <Button
           type="submit"
           variant="custom"

@@ -12,7 +12,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     <div className="mb-4">
       <label className="block text-sm font-medium text-gray-700">
         {label}
-        {required}
+        {required }
       </label>
       <input
         ref={ref}
