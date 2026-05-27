@@ -69,9 +69,7 @@ export const Step2_QuoteAndPlans = () => {
   };
 
   const getPlanIcon = (planName: string): string => {
-    if (planName.toLowerCase().includes('clínica')) {
-      return iconClinic;
-    }
+    if (planName.toLowerCase().includes('clínica')) return iconClinic;
     return iconHouse;
   };
 
@@ -89,18 +87,20 @@ export const Step2_QuoteAndPlans = () => {
   return (
     <>
       <Stepper currentStep={1} steps={steps} />
-      <div className="flex-1 flex items-center justify-center p-4">
-        <div className="flex flex-col items-center w-full max-w-[544px] gap-8">
+      <div className="flex-1 flex flex-col items-center justify-start p-4">
+        {/* Contenedor principal (tarjetas de selección) - centrado y responsivo */}
+        <div className="flex flex-col items-center w-full max-w-[544px] gap-6 md:gap-8">
           <div className="flex flex-col items-center gap-2 w-full">
-            <h1 className="text-[#141938] font-bold text-[40px] leading-[48px] text-center tracking-[-0.6px]">
+            <h1 className="text-[#141938] font-bold text-2xl md:text-[40px] leading-8 md:leading-[48px] text-center tracking-[-0.6px]">
               {user.name} ¿Para quién deseas cotizar?
             </h1>
-            <p className="text-[#141938] font-normal text-base leading-7 text-center tracking-[0.1px]">
+            <p className="text-[#141938] font-normal text-sm md:text-base leading-5 md:leading-7 text-center tracking-[0.1px]">
               Selecciona la opción que se ajuste más a tus necesidades.
             </p>
           </div>
 
-          <div className="flex flex-col md:flex-row gap-10 md:gap-8 w-full justify-center">
+          {/* Tarjetas de selección - en móvil se apilan con gap-4 */}
+          <div className="flex flex-col md:flex-row gap-4 md:gap-8 w-full justify-center">
             <SelectionCard
               title="Para mí"
               description="Cotiza tu seguro de salud y agrega familiares si así lo deseas."
@@ -110,41 +110,42 @@ export const Step2_QuoteAndPlans = () => {
             />
             <SelectionCard
               title="Para alguien más"
-              description="Realiza una cotización para alguien diferente a ti."
+              description="Realiza una cotización para uno de tus familiares o cualquier persona."
               iconSrc={otherIcon}
               selected={quoteType === 'forSomeoneElse'}
               onSelect={() => handleQuoteSelect('forSomeoneElse')}
             />
           </div>
         </div>
-      </div>
 
-      {quoteType && filteredPlans.length > 0 && (
-        <div className="w-full mt-12 pb-12">
-          <h3 className="text-xl font-bold text-[#141938] mb-8 text-center">Planes disponibles</h3>
-          <div className="max-w-[928px] mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-              {filteredPlans.map((plan, idx) => {
-                const finalPrice = plan.price * (1 - discountPercent / 100);
-                const originalPrice = discountPercent > 0 ? plan.price : undefined;
-                return (
-                  <PlanCard
-                    key={idx}
-                    name={plan.name}
-                    originalPrice={originalPrice}
-                    currentPrice={finalPrice}
-                    benefits={plan.description}
-                    onSelect={() => handleSelectPlan(plan)}
-                    recommended={plan.name === "Plan en Casa y Clínica"}
-                    discountPercent={discountPercent}
-                    iconSrc={getPlanIcon(plan.name)}
-                  />
-                );
-              })}
+        {/* Contenedor de planes - ya responsive (grid-cols-1 md:grid-cols-3) */}
+        {quoteType && filteredPlans.length > 0 && (
+          <div className="w-full mt-8 md:mt-12 pb-12">
+            <h3 className="text-xl font-bold text-[#141938] mb-6 text-center">Planes disponibles</h3>
+            <div className="max-w-[928px] mx-auto px-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-stretch">
+                {filteredPlans.map((plan, idx) => {
+                  const finalPrice = plan.price * (1 - discountPercent / 100);
+                  const originalPrice = discountPercent > 0 ? plan.price : undefined;
+                  return (
+                    <PlanCard
+                      key={idx}
+                      name={plan.name}
+                      originalPrice={originalPrice}
+                      currentPrice={finalPrice}
+                      benefits={plan.description}
+                      onSelect={() => handleSelectPlan(plan)}
+                      recommended={plan.name === "Plan en Casa y Clínica"}
+                      discountPercent={discountPercent}
+                      iconSrc={getPlanIcon(plan.name)}
+                    />
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 };
