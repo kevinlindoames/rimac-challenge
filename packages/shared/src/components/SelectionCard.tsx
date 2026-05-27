@@ -3,7 +3,7 @@ import React from 'react';
 interface SelectionCardProps {
   title: string;
   description: string;
-  iconSrc: string; // ruta de la imagen PNG
+  iconSrc: string;
   selected: boolean;
   onSelect: () => void;
 }
@@ -34,13 +34,15 @@ export const SelectionCard: React.FC<SelectionCardProps> = ({
         <img src={iconSrc} alt={title} className="w-full h-full object-cover" />
       </div>
 
-      {/* Título */}
-      <h3 className="mt-4 text-xl font-black text-[#141938] tracking-[-0.2px]">{title}</h3>
-
-      {/* Descripción */}
-      <p className="mt-2 text-xs font-normal text-[#141938] leading-5 tracking-[0.2px]">
-        {description}
-      </p>
+      {/* Contenido (título + descripción con gap 8px) */}
+      <div className="flex flex-col gap-2 mt-4">
+        <h3 className="text-xl font-black text-[#141938] tracking-[-0.2px] leading-7">
+          {title}
+        </h3>
+        <p className="text-xs font-normal text-[#141938] leading-5 tracking-[0.2px]">
+          {description}
+        </p>
+      </div>
     </div>
   );
 };

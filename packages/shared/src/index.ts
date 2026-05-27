@@ -8,3 +8,4 @@ export { default as userFormReducer, updateForm } from './store/formSlice';
 export type { UserData } from './store/formSlice';
 export { Stepper } from './components/Stepper';
 export { SelectionCard } from './components/SelectionCard';
+export { PlanCard } from './components/PlanCard';

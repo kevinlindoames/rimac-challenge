@@ -101,7 +101,7 @@ export const Step2_QuoteAndPlans = () => {
             />
             <SelectionCard
               title="Para alguien más"
-              description="Realiza una cotización para uno de tus familiares o cualquier persona."
+              description="Realiza una cotización para alguien diferente a ti."
               iconSrc={otherIcon}
               selected={quoteType === "forSomeoneElse"}
               onSelect={() => handleQuoteSelect("forSomeoneElse")}
