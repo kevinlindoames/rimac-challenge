@@ -6,3 +6,4 @@ export { TwoColumnLayout } from './components/TwoColumnLayout';
 export { useUserDataForm } from './hooks/useUserDataForm';
 export { default as userFormReducer, updateForm } from './store/formSlice';
 export type { UserData } from './store/formSlice';
+export { Stepper } from './components/Stepper';

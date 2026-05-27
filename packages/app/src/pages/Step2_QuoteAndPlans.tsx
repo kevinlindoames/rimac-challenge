@@ -1,10 +1,8 @@
-// packages/app/src/pages/Step2_QuoteAndPlans.tsx
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { setQuoteType, setSelectedPlan } from '../core/store/slices/quoteSlice';
 import { fetchPlans } from '../services/api';
-import { TwoColumnLayout } from '@rimac/shared';
+import { Stepper, TwoColumnLayout } from '@rimac/shared';
 import { toast } from 'sonner';
 import { useAppDispatch } from '../core/hooks/useAppDispatch';
 import { useAppSelector } from '../core/hooks/useAppSelector';
@@ -15,6 +13,11 @@ interface Plan {
   description: string[];
   age: number;
 }
+
+const steps = [
+  { label: 'Planes y coberturas' },
+  { label: 'Resumen' },
+];
 
 export const Step2_QuoteAndPlans = () => {
   const navigate = useNavigate();
@@ -27,6 +30,7 @@ export const Step2_QuoteAndPlans = () => {
   const [filteredPlans, setFilteredPlans] = useState<Plan[]>([]);
   const [plansLoading, setPlansLoading] = useState(true);
 
+  // Cargar planes desde la API
   useEffect(() => {
     const loadPlans = async () => {
       try {
@@ -42,7 +46,7 @@ export const Step2_QuoteAndPlans = () => {
     loadPlans();
   }, []);
 
-  // Filtrar planes solo cuando user y user.age existan
+  // Filtrar planes cuando tengamos el usuario y los planes cargados
   useEffect(() => {
     if (user?.age !== undefined && plans.length) {
       const filtered = plans.filter((plan) => plan.age >= user.age);
@@ -72,69 +76,100 @@ export const Step2_QuoteAndPlans = () => {
   const discountPercent = quoteType === 'forSomeoneElse' ? 5 : 0;
 
   return (
-    <TwoColumnLayout
-      tag="Elige tu plan"
-      title={`${user.name} ¿Para quién deseas cotizar?`}
-      subtitle="Selecciona la opción que se ajuste más a tus necesidades."
-    >
-      <div className="w-full max-w-[351px] mx-auto md:mx-0">
-        {/* Tarjetas de selección */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          <div
-            onClick={() => handleQuoteSelect('forMe')}
-            className={`border-2 rounded-2xl p-4 cursor-pointer transition-all ${
-              quoteType === 'forMe' ? 'border-primary bg-blue-50' : 'border-gray-200 hover:shadow'
-            }`}
-          >
-            <h3 className="font-bold text-lg">Para mí</h3>
-            <p className="text-sm text-gray-600">Cotiza tu seguro y agrega familiares</p>
-          </div>
-          <div
-            onClick={() => handleQuoteSelect('forSomeoneElse')}
-            className={`border-2 rounded-2xl p-4 cursor-pointer transition-all ${
-              quoteType === 'forSomeoneElse' ? 'border-primary bg-blue-50' : 'border-gray-200 hover:shadow'
-            }`}
-          >
-            <h3 className="font-bold text-lg">Para alguien más</h3>
-            <p className="text-sm text-gray-600">Cotiza para un familiar o amigo</p>
-          </div>
-        </div>
-
-        {/* Lista de planes filtrados */}
-        {quoteType && (
-          <div className="space-y-4">
-            <h3 className="font-semibold text-lg">Planes disponibles</h3>
-            {filteredPlans.map((plan, idx) => {
-              const finalPrice = plan.price * (1 - discountPercent / 100);
-              return (
-                <div key={idx} className="border rounded-2xl p-4 shadow-sm">
-                  <h4 className="font-bold text-xl">{plan.name}</h4>
-                  <p className="text-2xl text-primary font-black">
-                    ${finalPrice.toFixed(2)} <span className="text-sm">/mes</span>
+    <>
+      <Stepper currentStep={1} steps={steps} />
+      <div className="flex-1 flex items-center justify-center p-4">
+        <TwoColumnLayout
+          tag="Elige tu plan"
+          title={`${user.name} ¿Para quién deseas cotizar?`}
+          subtitle="Selecciona la opción que se ajuste más a tus necesidades."
+        >
+          <div className="w-full max-w-[544px] mx-auto md:mx-0">
+            {/* Tarjetas de selección */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+              {/* Para mí */}
+              <div
+                onClick={() => handleQuoteSelect('forMe')}
+                className={`cursor-pointer rounded-2xl p-6 shadow-lg transition-all ${
+                  quoteType === 'forMe'
+                    ? 'border-2 border-[#4F4FFF] bg-white'
+                    : 'border border-gray-200 bg-white hover:shadow-xl'
+                }`}
+              >
+                <div className="flex flex-col items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#34263B] to-[#13172C] flex items-center justify-center">
+                    <span className="text-white text-2xl">👤</span>
+                  </div>
+                  <h3 className="text-xl font-black text-[#141938]">Para mí</h3>
+                  <p className="text-sm text-[#141938] opacity-80">
+                    Cotiza tu seguro de salud y agrega familiares si así lo deseas.
                   </p>
-                  {discountPercent > 0 && (
-                    <p className="text-sm text-green-600">5% de descuento aplicado</p>
-                  )}
-                  <ul className="mt-2 space-y-1">
-                    {plan.description.map((item, i) => (
-                      <li key={i} className="text-sm flex items-start gap-1">
-                        ✓ {item}
-                      </li>
-                    ))}
-                  </ul>
-                  <button
-                    onClick={() => handleSelectPlan(plan)}
-                    className="mt-3 w-full bg-primary text-white py-2 rounded-full hover:bg-blue-700 transition"
-                  >
-                    Seleccionar Plan
-                  </button>
                 </div>
-              );
-            })}
+              </div>
+
+              {/* Para alguien más */}
+              <div
+                onClick={() => handleQuoteSelect('forSomeoneElse')}
+                className={`cursor-pointer rounded-2xl p-6 shadow-lg transition-all ${
+                  quoteType === 'forSomeoneElse'
+                    ? 'border-2 border-[#4F4FFF] bg-white'
+                    : 'border border-gray-200 bg-white hover:shadow-xl'
+                }`}
+              >
+                <div className="flex flex-col items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#34263B] to-[#13172C] flex items-center justify-center">
+                    <span className="text-white text-2xl">👥</span>
+                  </div>
+                  <h3 className="text-xl font-black text-[#141938]">Para alguien más</h3>
+                  <p className="text-sm text-[#141938] opacity-80">
+                    Realiza una cotización para uno de tus familiares o cualquier persona.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Lista de planes filtrados (solo si se seleccionó una opción) */}
+            {quoteType && (
+              <div className="space-y-6">
+                <h3 className="text-xl font-bold text-[#141938] mb-4">Planes disponibles</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {filteredPlans.map((plan, idx) => {
+                    const finalPrice = plan.price * (1 - discountPercent / 100);
+                    return (
+                      <div key={idx} className="bg-white rounded-2xl p-6 shadow-md border border-gray-100">
+                        <h4 className="text-lg font-bold text-[#141938]">{plan.name}</h4>
+                        <div className="mt-2">
+                          <span className="text-2xl font-black text-[#4F4FFF]">
+                            ${finalPrice.toFixed(2)}
+                          </span>
+                          <span className="text-sm text-gray-500"> /mes</span>
+                        </div>
+                        {discountPercent > 0 && (
+                          <p className="text-sm text-green-600 mt-1">5% de descuento aplicado</p>
+                        )}
+                        <ul className="mt-4 space-y-2">
+                          {plan.description.slice(0, 3).map((item, i) => (
+                            <li key={i} className="text-sm text-[#141938] flex items-start gap-2">
+                              <span className="text-green-500">✓</span> {item}
+                            </li>
+                          ))}
+                        </ul>
+                        <button
+                          onClick={() => handleSelectPlan(plan)}
+                          className="mt-6 w-full bg-[#4F4FFF] text-white py-2 rounded-full hover:bg-blue-700 transition"
+                        >
+                          Seleccionar Plan
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
-        )}
+        </TwoColumnLayout>
       </div>
-    </TwoColumnLayout>
+    </>
   );
 };
 

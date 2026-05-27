@@ -1,10 +1,12 @@
+import { lazy, Suspense } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { store } from './core/store';
 import { Header } from '@rimac/shared';
 import { ErrorBoundary } from './core/error/ErrorBoundary';
-import { AppRoutes } from './routes/AppRoutes';
+
+const AppRoutes = lazy(() => import('./routes/AppRoutes'));
 
 function App() {
   return (
@@ -13,8 +15,10 @@ function App() {
         <ErrorBoundary>
           <div className="min-h-screen flex flex-col bg-gray-50">
             <Header />
-            <main className="flex-1 flex items-center justify-center p-4">
-              <AppRoutes />
+            <main className="flex-1">
+              <Suspense fallback={<div className="text-center p-8">Cargando...</div>}>
+                <AppRoutes />
+              </Suspense>
             </main>
             <Toaster position="top-right" richColors />
           </div>
