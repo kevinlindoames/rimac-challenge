@@ -1,0 +1,21 @@
+{
+  "name": "rimac-challenge",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "pnpm --filter @rimac/app dev",
+    "build": "pnpm --filter @rimac/app build",
+    "preview": "pnpm --filter @rimac/app preview",
+    "test": "pnpm --filter @rimac/app test",
+    "lint": "eslint . --ext .ts,.tsx --fix",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.10"
+  }
+}
