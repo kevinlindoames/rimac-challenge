@@ -29,10 +29,7 @@ export const Step3_Summary = () => {
   const finalPrice = selectedPlan.price * (1 - discountPercent / 100);
   const fullName = `${user.name} ${user.lastName}`;
 
-  const handleVolver = () => {
-    navigate('/step2');
-  };
-
+  const handleVolver = () => navigate('/step2');
   const handleConfirm = () => {
     dispatch(resetQuote());
     dispatch(resetForm());
@@ -43,26 +40,22 @@ export const Step3_Summary = () => {
   return (
     <>
       <Stepper currentStep={2} steps={steps} />
-      <div className="flex-1 flex flex-col items-center justify-start p-4 md:pt-8 md:pb-12">
-        {/* Contenedor principal con padding lateral 216px en desktop (como en Figma) */}
-        <div className="w-full max-w-[1360px] mx-auto px-6 md:px-[216px]">
-          {/* Botón Volver (alineado a la izquierda) */}
-          <div className="max-w-[928px] mx-auto mb-8">
-            <button
-              onClick={handleVolver}
-              className="inline-flex items-center gap-2 text-[#4F4FFF] font-bold text-lg leading-5 tracking-wide hover:opacity-80 transition"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15 18L9 12L15 6" stroke="#4F4FFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              Volver
-            </button>
-          </div>
+      <div className="flex-1 flex flex-col items-center justify-start p-4">
+        <div className="w-full max-w-[1360px] mx-auto px-6 md:px-[216px] py-8 md:pt-16 md:pb-28">
+          {/* Botón Volver (alineado a la izquierda, fuera de la tarjeta) */}
+          <button
+            onClick={handleVolver}
+            className="inline-flex items-center gap-2 text-[#4F4FFF] font-bold text-lg leading-5 tracking-wide mb-6 hover:opacity-80 transition"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15 18L9 12L15 6" stroke="#4F4FFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Volver
+          </button>
 
-          {/* Contenedor de la tarjeta: ancho 928px, centrado */}
+          {/* Tarjeta: ancho 928px, padding derecho 224px solo en desktop */}
           <div className="max-w-[928px] mx-auto">
-            {/* Tarjeta blanca con padding-right: 224px en desktop y sin padding-right en mobile */}
-            <div className="bg-white rounded-2xl shadow-[0px_1px_24px_rgba(174,172,243,0.25)] p-6 md:pt-8 md:pb-8 md:pl-8 md:pr-[224px]">
+            <div className="bg-white rounded-2xl shadow-[0px_1px_24px_rgba(174,172,243,0.25)] p-6 md:p-8 md:pr-[224px]">
               <h1 className="text-[#141938] font-bold text-3xl md:text-4xl leading-10 md:leading-[48px] tracking-[-0.6px] mb-6">
                 Resumen del seguro
               </h1>
@@ -82,7 +75,6 @@ export const Step3_Summary = () => {
                 </div>
               </div>
 
-              {/* Línea divisoria */}
               <div className="w-full h-px bg-[#D7DBF5] my-6" />
 
               {/* Responsable de pago */}
@@ -98,7 +90,6 @@ export const Step3_Summary = () => {
                 </p>
               </div>
 
-              {/* Línea divisoria */}
               <div className="w-full h-px bg-[#D7DBF5] my-6" />
 
               {/* Plan elegido */}
@@ -117,7 +108,6 @@ export const Step3_Summary = () => {
                 </p>
               </div>
 
-              {/* Botón confirmar */}
               <button
                 onClick={handleConfirm}
                 className="w-full bg-[#FF1C44] text-white font-bold text-lg leading-5 tracking-wide py-3 rounded-3xl hover:bg-red-600 transition"
