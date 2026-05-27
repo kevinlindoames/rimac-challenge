@@ -35,6 +35,7 @@ export const Step2_QuoteAndPlans = () => {
   const [plans, setPlans] = useState<Plan[]>([]);
   const [filteredPlans, setFilteredPlans] = useState<Plan[]>([]);
   const [plansLoading, setPlansLoading] = useState(true);
+  const [currentPlanIndex, setCurrentPlanIndex] = useState(0);
 
   useEffect(() => {
     const loadPlans = async () => {
@@ -58,6 +59,10 @@ export const Step2_QuoteAndPlans = () => {
     }
   }, [user, plans]);
 
+  useEffect(() => {
+    setCurrentPlanIndex(0);
+  }, [quoteType, filteredPlans]);
+
   const handleQuoteSelect = (type: 'forMe' | 'forSomeoneElse') => {
     dispatch(setQuoteType(type));
     toast.info(`Has seleccionado: ${type === 'forMe' ? 'Para mí' : 'Para alguien más'}`);
@@ -66,6 +71,14 @@ export const Step2_QuoteAndPlans = () => {
   const handleSelectPlan = (plan: Plan) => {
     dispatch(setSelectedPlan(plan));
     navigate('/step3');
+  };
+
+  const handlePrevPlan = () => {
+    setCurrentPlanIndex((prev) => (prev > 0 ? prev - 1 : filteredPlans.length - 1));
+  };
+
+  const handleNextPlan = () => {
+    setCurrentPlanIndex((prev) => (prev < filteredPlans.length - 1 ? prev + 1 : 0));
   };
 
   const getPlanIcon = (planName: string): string => {
@@ -88,19 +101,17 @@ export const Step2_QuoteAndPlans = () => {
     <>
       <Stepper currentStep={1} steps={steps} />
       <div className="flex-1 flex flex-col items-center justify-start p-4">
-        {/* Contenedor principal (tarjetas de selección) - centrado y responsivo */}
         <div className="flex flex-col items-center w-full max-w-[544px] gap-6 md:gap-8">
-          <div className="flex flex-col items-center gap-2 w-full">
-            <h1 className="text-[#141938] font-bold text-2xl md:text-[40px] leading-8 md:leading-[48px] text-center tracking-[-0.6px]">
+          <div className="flex flex-col items-center gap-2 w-full px-4 md:px-0">
+            <h1 className="text-[#141938] font-bold text-[28px] md:text-[40px] leading-9 md:leading-[48px] text-center tracking-[-0.6px]">
               {user.name} ¿Para quién deseas cotizar?
             </h1>
-            <p className="text-[#141938] font-normal text-sm md:text-base leading-5 md:leading-7 text-center tracking-[0.1px]">
+            <p className="text-[#141938] font-normal text-base md:text-base leading-7 text-center tracking-[0.1px]">
               Selecciona la opción que se ajuste más a tus necesidades.
             </p>
           </div>
 
-          {/* Tarjetas de selección - en móvil se apilan con gap-4 */}
-          <div className="flex flex-col md:flex-row gap-4 md:gap-8 w-full justify-center">
+          <div className="flex flex-col md:flex-row gap-6 md:gap-8 w-full justify-center px-4 md:px-0">
             <SelectionCard
               title="Para mí"
               description="Cotiza tu seguro de salud y agrega familiares si así lo deseas."
@@ -110,7 +121,7 @@ export const Step2_QuoteAndPlans = () => {
             />
             <SelectionCard
               title="Para alguien más"
-              description="Realiza una cotización para uno de tus familiares o cualquier persona."
+              description="Realiza una cotización para alguien diferente a ti."
               iconSrc={otherIcon}
               selected={quoteType === 'forSomeoneElse'}
               onSelect={() => handleQuoteSelect('forSomeoneElse')}
@@ -118,12 +129,13 @@ export const Step2_QuoteAndPlans = () => {
           </div>
         </div>
 
-        {/* Contenedor de planes - ya responsive (grid-cols-1 md:grid-cols-3) */}
         {quoteType && filteredPlans.length > 0 && (
-          <div className="w-full mt-8 md:mt-12 pb-12">
+          <div className="w-full py-5 pb-14 md:mt-12 md:pb-12">
             <h3 className="text-xl font-bold text-[#141938] mb-6 text-center">Planes disponibles</h3>
-            <div className="max-w-[928px] mx-auto px-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-stretch">
+
+            {/* Desktop: grid de 3 columnas */}
+            <div className="hidden md:block max-w-[928px] mx-auto px-4">
+              <div className="grid grid-cols-3 gap-8 items-stretch">
                 {filteredPlans.map((plan, idx) => {
                   const finalPrice = plan.price * (1 - discountPercent / 100);
                   const originalPrice = discountPercent > 0 ? plan.price : undefined;
@@ -141,6 +153,50 @@ export const Step2_QuoteAndPlans = () => {
                     />
                   );
                 })}
+              </div>
+            </div>
+
+            {/* Mobile: carrusel con una tarjeta, flechas abajo y paginación */}
+            <div className="md:hidden w-full">
+              <div className="flex flex-col items-center gap-6">
+                {/* Tarjeta actual - altura mínima fija para todas iguales */}
+                <div className="w-full max-w-[336px] mx-auto">
+                  <PlanCard
+                    name={filteredPlans[currentPlanIndex].name}
+                    originalPrice={discountPercent > 0 ? filteredPlans[currentPlanIndex].price : undefined}
+                    currentPrice={filteredPlans[currentPlanIndex].price * (1 - discountPercent / 100)}
+                    benefits={filteredPlans[currentPlanIndex].description}
+                    onSelect={() => handleSelectPlan(filteredPlans[currentPlanIndex])}
+                    recommended={filteredPlans[currentPlanIndex].name === "Plan en Casa y Clínica"}
+                    discountPercent={discountPercent}
+                    iconSrc={getPlanIcon(filteredPlans[currentPlanIndex].name)}
+                  />
+                </div>
+
+                {/* Controles: flechas y paginación centrados */}
+                <div className="flex flex-row items-center justify-center gap-4">
+                  <button
+                    onClick={handlePrevPlan}
+                    className="w-8 h-8 rounded-full border-2 border-[#A9AFD9] flex items-center justify-center"
+                    aria-label="Anterior"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M7.5 2.5L4 6L7.5 9.5" stroke="#7981B2" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                  <span className="text-base font-normal text-[#141938]">
+                    {currentPlanIndex + 1} / {filteredPlans.length}
+                  </span>
+                  <button
+                    onClick={handleNextPlan}
+                    className="w-8 h-8 rounded-full border-2 border-[#4F4FFF] flex items-center justify-center"
+                    aria-label="Siguiente"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M4.5 2.5L8 6L4.5 9.5" stroke="#4F4FFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
