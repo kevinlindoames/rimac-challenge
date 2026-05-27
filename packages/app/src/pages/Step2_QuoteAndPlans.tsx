@@ -8,8 +8,10 @@ import { Stepper, SelectionCard, PlanCard } from '@rimac/shared';
 import { toast } from 'sonner';
 import { useAppDispatch } from "../core/hooks/useAppDispatch";
 import { useAppSelector } from "../core/hooks/useAppSelector";
-import iconMe from '../assets/icon-me.png';        // Icono para "Para mí"
+import iconMe from '../assets/icon-me.png';        
 import otherIcon from "../assets/icon-other.png";
+import iconClinic from '../assets/icon-clinic.png';
+import iconHouse from '../assets/icon-house.png';
 
 interface Plan {
   name: string;
@@ -34,7 +36,6 @@ export const Step2_QuoteAndPlans = () => {
   const [filteredPlans, setFilteredPlans] = useState<Plan[]>([]);
   const [plansLoading, setPlansLoading] = useState(true);
 
-  // Cargar planes desde la API
   useEffect(() => {
     const loadPlans = async () => {
       try {
@@ -50,7 +51,6 @@ export const Step2_QuoteAndPlans = () => {
     loadPlans();
   }, []);
 
-  // Filtrar planes según la edad del usuario
   useEffect(() => {
     if (user?.age !== undefined && plans.length) {
       const filtered = plans.filter((plan) => plan.age >= user.age);
@@ -68,6 +68,13 @@ export const Step2_QuoteAndPlans = () => {
     navigate('/step3');
   };
 
+  const getPlanIcon = (planName: string): string => {
+    if (planName.toLowerCase().includes('clínica')) {
+      return iconClinic;
+    }
+    return iconHouse;
+  };
+
   if (userLoading || plansLoading) {
     return <div className="text-center p-8">Cargando...</div>;
   }
@@ -83,9 +90,7 @@ export const Step2_QuoteAndPlans = () => {
     <>
       <Stepper currentStep={1} steps={steps} />
       <div className="flex-1 flex items-center justify-center p-4">
-        {/* Contenedor principal de la página (centrado) */}
         <div className="flex flex-col items-center w-full max-w-[544px] gap-8">
-          {/* Título y subtítulo */}
           <div className="flex flex-col items-center gap-2 w-full">
             <h1 className="text-[#141938] font-bold text-[40px] leading-[48px] text-center tracking-[-0.6px]">
               {user.name} ¿Para quién deseas cotizar?
@@ -95,7 +100,6 @@ export const Step2_QuoteAndPlans = () => {
             </p>
           </div>
 
-          {/* Tarjetas de selección (Para mí / Para alguien más) */}
           <div className="flex flex-col md:flex-row gap-10 md:gap-8 w-full justify-center">
             <SelectionCard
               title="Para mí"
@@ -115,12 +119,11 @@ export const Step2_QuoteAndPlans = () => {
         </div>
       </div>
 
-      {/* Contenedor independiente para los planes (928px centrado) */}
       {quoteType && filteredPlans.length > 0 && (
         <div className="w-full mt-12 pb-12">
-          <h3 className="text-xl font-bold text-[#141938] mb-6 text-center">Planes disponibles</h3>
+          <h3 className="text-xl font-bold text-[#141938] mb-8 text-center">Planes disponibles</h3>
           <div className="max-w-[928px] mx-auto px-4">
-<div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
               {filteredPlans.map((plan, idx) => {
                 const finalPrice = plan.price * (1 - discountPercent / 100);
                 const originalPrice = discountPercent > 0 ? plan.price : undefined;
@@ -132,9 +135,9 @@ export const Step2_QuoteAndPlans = () => {
                     currentPrice={finalPrice}
                     benefits={plan.description}
                     onSelect={() => handleSelectPlan(plan)}
-                      recommended={plan.name === "Plan en Casa y Clínica"} // ejemplo
-
+                    recommended={plan.name === "Plan en Casa y Clínica"}
                     discountPercent={discountPercent}
+                    iconSrc={getPlanIcon(plan.name)}
                   />
                 );
               })}
