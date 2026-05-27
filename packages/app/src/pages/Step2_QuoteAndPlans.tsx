@@ -1,13 +1,13 @@
+// packages/app/src/pages/Step2_QuoteAndPlans.tsx
+
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import { fetchUser, fetchPlans } from '../services/api';
-import { calculateAge } from '../utils/helpers';
+import { setQuoteType, setSelectedPlan } from '../core/store/slices/quoteSlice';
+import { fetchPlans } from '../services/api';
 import { TwoColumnLayout } from '@rimac/shared';
 import { toast } from 'sonner';
 import { useAppDispatch } from '../core/hooks/useAppDispatch';
 import { useAppSelector } from '../core/hooks/useAppSelector';
-import { setQuoteType, setSelectedPlan } from '../core/store/slices/quoteSlice';
 
 interface Plan {
   name: string;
@@ -16,43 +16,39 @@ interface Plan {
   age: number;
 }
 
-const Step2_QuoteAndPlans = () => {
+export const Step2_QuoteAndPlans = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const quoteType = useAppSelector((state) => state.quote.type);
+  const user = useAppSelector((state) => state.user.data);
+  const userLoading = useAppSelector((state) => state.user.loading);
 
-  const [userName, setUserName] = useState('');
-  const [userAge, setUserAge] = useState<number | null>(null);
   const [plans, setPlans] = useState<Plan[]>([]);
   const [filteredPlans, setFilteredPlans] = useState<Plan[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [plansLoading, setPlansLoading] = useState(true);
 
   useEffect(() => {
-    const loadData = async () => {
+    const loadPlans = async () => {
       try {
-        const user = await fetchUser();
-        const age = calculateAge(user.birthDay);
-        setUserName(user.name);
-        setUserAge(age);
-
         const plansData = await fetchPlans();
         setPlans(plansData.list);
       } catch (error) {
         console.error(error);
-        toast.error('Error al cargar los datos');
+        toast.error('Error al cargar los planes');
       } finally {
-        setLoading(false);
+        setPlansLoading(false);
       }
     };
-    loadData();
+    loadPlans();
   }, []);
 
+  // Filtrar planes solo cuando user y user.age existan
   useEffect(() => {
-    if (userAge !== null && plans.length) {
-      const filtered = plans.filter((plan) => plan.age >= userAge);
+    if (user?.age !== undefined && plans.length) {
+      const filtered = plans.filter((plan) => plan.age >= user.age);
       setFilteredPlans(filtered);
     }
-  }, [userAge, plans]);
+  }, [user, plans]);
 
   const handleQuoteSelect = (type: 'forMe' | 'forSomeoneElse') => {
     dispatch(setQuoteType(type));
@@ -64,25 +60,30 @@ const Step2_QuoteAndPlans = () => {
     navigate('/step3');
   };
 
-  const discountPercent = quoteType === 'forSomeoneElse' ? 5 : 0;
-
-  if (loading) {
-    return <div className="text-center p-8">Cargando planes...</div>;
+  if (userLoading || plansLoading) {
+    return <div className="text-center p-8">Cargando...</div>;
   }
+
+  if (!user) {
+    navigate('/');
+    return null;
+  }
+
+  const discountPercent = quoteType === 'forSomeoneElse' ? 5 : 0;
 
   return (
     <TwoColumnLayout
       tag="Elige tu plan"
-      title={`${userName || 'Usuario'} ¿Para quién deseas cotizar?`}
+      title={`${user.name} ¿Para quién deseas cotizar?`}
       subtitle="Selecciona la opción que se ajuste más a tus necesidades."
     >
       <div className="w-full max-w-[351px] mx-auto md:mx-0">
-        {/* Tarjetas de opción */}
+        {/* Tarjetas de selección */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           <div
             onClick={() => handleQuoteSelect('forMe')}
             className={`border-2 rounded-2xl p-4 cursor-pointer transition-all ${
-              quoteType === 'forMe' ? 'border-primary bg-blue-50' : 'border-gray-200'
+              quoteType === 'forMe' ? 'border-primary bg-blue-50' : 'border-gray-200 hover:shadow'
             }`}
           >
             <h3 className="font-bold text-lg">Para mí</h3>
@@ -91,7 +92,7 @@ const Step2_QuoteAndPlans = () => {
           <div
             onClick={() => handleQuoteSelect('forSomeoneElse')}
             className={`border-2 rounded-2xl p-4 cursor-pointer transition-all ${
-              quoteType === 'forSomeoneElse' ? 'border-primary bg-blue-50' : 'border-gray-200'
+              quoteType === 'forSomeoneElse' ? 'border-primary bg-blue-50' : 'border-gray-200 hover:shadow'
             }`}
           >
             <h3 className="font-bold text-lg">Para alguien más</h3>

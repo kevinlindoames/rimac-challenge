@@ -4,7 +4,7 @@ export interface User {
   name: string;
   lastName: string;
   birthDay: string;
-  age?: number; // opcional, calculado
+  age?: number;
 }
 
 interface UserState {
