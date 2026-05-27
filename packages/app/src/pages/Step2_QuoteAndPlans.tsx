@@ -157,10 +157,10 @@ export const Step2_QuoteAndPlans = () => {
             </div>
 
             {/* Mobile: carrusel con una tarjeta, altura fija para evitar saltos */}
-            <div className="md:hidden w-full">
-              <div className="flex flex-col items-center gap-6">
+<div className="md:hidden w-full">
+  <div className="flex flex-col items-center gap-6">
                 {/* Tarjeta actual - altura mínima fija para todas iguales */}
-                <div className="w-full max-w-[336px] mx-auto">
+    <div className="w-[288px] mx-auto">
                   <PlanCard
                     name={filteredPlans[currentPlanIndex].name}
                     originalPrice={discountPercent > 0 ? filteredPlans[currentPlanIndex].price : undefined}
@@ -172,7 +172,7 @@ export const Step2_QuoteAndPlans = () => {
                     iconSrc={getPlanIcon(filteredPlans[currentPlanIndex].name)}
                   />
                 </div>
-                <div className="flex flex-row items-center justify-center gap-4">
+    <div className="flex flex-row items-center justify-center gap-4">
                   <button
                     onClick={handlePrevPlan}
                     className="w-8 h-8 rounded-full border-2 border-[#A9AFD9] flex items-center justify-center"
