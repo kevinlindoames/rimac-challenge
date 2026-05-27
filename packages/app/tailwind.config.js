@@ -1,4 +1,3 @@
-/** @type {import('tailwindcss').Config} */
 export default {
   content: [
     './index.html',
@@ -7,12 +6,12 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Lato', 'Inter', 'system-ui', 'sans-serif'],
+      },
       colors: {
         primary: '#00ADEF',
         secondary: '#1E2A3E',
-      },
-      fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
       },
     },
   },
