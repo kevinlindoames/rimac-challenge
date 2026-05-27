@@ -1,3 +1,4 @@
+// packages/shared/src/components/Stepper.tsx
 import React from 'react';
 
 interface StepperProps {
@@ -11,7 +12,7 @@ export const Stepper: React.FC<StepperProps> = ({ currentStep, steps }) => {
 
   return (
     <>
-      {/* Desktop: Stepper horizontal con círculos y texto */}
+      {/* Desktop: Stepper horizontal */}
       <div className="hidden md:block w-full bg-[#EDEFFC] py-4">
         <div className="max-w-[1360px] mx-auto px-4 md:px-0">
           <div className="flex flex-row items-center justify-center gap-4">
@@ -55,10 +56,9 @@ export const Stepper: React.FC<StepperProps> = ({ currentStep, steps }) => {
         </div>
       </div>
 
-      {/* Mobile: Stepper compacto con texto y barra de progreso */}
+      {/* Mobile: Stepper compacto con barra de progreso */}
       <div className="md:hidden w-full bg-[#FAFBFF]">
         <div className="flex flex-row items-center justify-between px-6 py-4 gap-4">
-          {/* Botón de retroceso (opcional, puede ser funcionalidad extra) */}
           <button
             onClick={() => window.history.back()}
             className="w-6 h-6 rounded-full border-2 border-[#A9AFD9] flex items-center justify-center"
@@ -68,13 +68,9 @@ export const Stepper: React.FC<StepperProps> = ({ currentStep, steps }) => {
               <path d="M7.5 2.5L4 6L7.5 9.5" stroke="#A9AFD9" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
-
-          {/* Texto del paso */}
           <span className="text-[#141938] font-black text-xs leading-4 tracking-[0.8px] uppercase">
             PASO {currentStep} DE {totalSteps}
           </span>
-
-          {/* Barra de progreso */}
           <div className="flex-1 h-1.5 bg-[#D7DBF5] rounded-full overflow-hidden">
             <div
               className="h-full bg-[#4F4FFF] rounded-full transition-all duration-300"
@@ -82,7 +78,6 @@ export const Stepper: React.FC<StepperProps> = ({ currentStep, steps }) => {
             />
           </div>
         </div>
-        {/* Divisor inferior */}
         <div className="w-full h-px bg-[#D7DBF5]" />
       </div>
     </>

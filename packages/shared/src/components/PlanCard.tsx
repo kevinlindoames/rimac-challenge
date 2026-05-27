@@ -24,8 +24,10 @@ export const PlanCard: React.FC<PlanCardProps> = ({
 }) => {
   const hasDiscount = discountPercent > 0 && originalPrice !== undefined;
 
+  // En móvil usamos min-h-[620px] para que todas las tarjetas tengan la misma altura
+  // En desktop la altura es automática (min-h-0)
   return (
-    <div className="relative w-full h-full flex flex-col pt-6 md:pt-[68px] px-4 md:px-8 pb-6 md:pb-12 gap-4 md:gap-6 bg-white rounded-2xl shadow-[0px_1px_32px_rgba(174,172,243,0.35)]">
+    <div className="relative w-full h-full flex flex-col pt-6 md:pt-[68px] px-4 md:px-8 pb-6 md:pb-12 gap-4 md:gap-6 bg-white rounded-2xl shadow-[0px_1px_32px_rgba(174,172,243,0.35)] min-h-[620px] md:min-h-0">
       {recommended && (
         <div className="absolute top-4 left-4 z-10 bg-[#7DF0BA] rounded-md px-2 py-0.5">
           <span className="text-[#141938] font-black text-xs leading-4 tracking-wide uppercase">
@@ -34,7 +36,6 @@ export const PlanCard: React.FC<PlanCardProps> = ({
         </div>
       )}
 
-      {/* Nombre + precio + icono */}
       <div className="flex flex-row items-start gap-2 md:gap-4 w-full">
         <div className="flex-1 flex flex-col gap-3 md:gap-6">
           <h3 className="text-lg md:text-2xl font-black text-[#141938] tracking-[-0.2px] leading-6 md:leading-8">

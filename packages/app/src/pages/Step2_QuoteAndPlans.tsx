@@ -156,7 +156,7 @@ export const Step2_QuoteAndPlans = () => {
               </div>
             </div>
 
-            {/* Mobile: carrusel con una tarjeta, flechas abajo y paginación */}
+            {/* Mobile: carrusel con una tarjeta, altura fija para evitar saltos */}
             <div className="md:hidden w-full">
               <div className="flex flex-col items-center gap-6">
                 {/* Tarjeta actual - altura mínima fija para todas iguales */}
@@ -172,8 +172,6 @@ export const Step2_QuoteAndPlans = () => {
                     iconSrc={getPlanIcon(filteredPlans[currentPlanIndex].name)}
                   />
                 </div>
-
-                {/* Controles: flechas y paginación centrados */}
                 <div className="flex flex-row items-center justify-center gap-4">
                   <button
                     onClick={handlePrevPlan}
