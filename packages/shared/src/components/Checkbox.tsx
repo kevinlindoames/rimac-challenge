@@ -6,11 +6,12 @@ interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>
   checked?: boolean;
 }
 
-export const Checkbox: React.FC<CheckboxProps> = ({ label, wide = false, checked, onChange, onBlur, name, ...props }) => {
-  return (
+export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
+  ({ label, wide = false, checked, onChange, onBlur, name, ...props }, ref) => (
     <label className="flex items-center gap-2 cursor-pointer">
       <input
         type="checkbox"
+        ref={ref}
         name={name}
         checked={checked}
         onChange={onChange}
@@ -22,6 +23,6 @@ export const Checkbox: React.FC<CheckboxProps> = ({ label, wide = false, checked
         {label}
       </span>
     </label>
-  );
-};
+  )
+);
 Checkbox.displayName = 'Checkbox';
